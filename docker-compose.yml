@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: catalog_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - catalog_net
+
+  catalog_service:
+    build: .
+    container_name: catalog_service
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/hydra-demo
+    depends_on:
+      - mongo
+    networks:
+      - catalog_net
+
+networks:
+  catalog_net:
+
+volumes:
+  mongo_data:
