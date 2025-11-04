@@ -3,6 +3,7 @@ import Category from "../models/category.model.js";
 
 // create catalog product (C3 only)
 export const createCatalog = async (data) => {
+  console.log("Creating catalog with data:", data);
   const cat = await Category.findById(data.category).lean();
   if (!cat) throw new Error("Category not found");
   if (cat.level !== "C3") throw new Error("Products can only be created under C3");
@@ -33,6 +34,7 @@ export const getCatalogById = async (id) => {
 };
 
 export const updateCatalog = async (id, data) => {
+  console.log("Creating catalog with data:", data);
   return await Catalog.findByIdAndUpdate(id, data, { new: true });
 };
 

@@ -15,3 +15,7 @@ export const updateProduct = async (id, data) =>
 
 export const deleteProduct = async (id) =>
   await Product.findByIdAndDelete(id);
+
+export const getAllProducts = async () => {
+  return await Product.find().populate("collectionId", "name");
+};

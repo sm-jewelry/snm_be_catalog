@@ -6,16 +6,16 @@ import { authorize } from "../middleware/authorize.js"
 const router = express.Router()
 
 // Only admin can create, update, delete
-// router.post("/", verifyOathkeeper, authorize(["admin"]), catalogController.createCatalog)
-router.post("/", catalogController.createCatalog)
+router.post("/", verifyOathkeeper, authorize(["admin"]), catalogController.createCatalog)
+// router.post("/", catalogController.createCatalog)
 router.put("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.updateCatalog)
 router.delete("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.deleteCatalog)
 
 // Both user and admin can read
-// router.get("/", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogs)
-router.get("/", catalogController.getCatalogs)
-// router.get("/:id", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogById)
-router.get("/:id", catalogController.getCatalogById)
+router.get("/", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogs)
+// router.get("/", catalogController.getCatalogs)
+router.get("/:id", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogById)
+// router.get("/:id", catalogController.getCatalogById)
 
 // New route: get catalogs by category hierarchy
 router.get(

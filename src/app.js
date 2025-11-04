@@ -5,6 +5,7 @@ import catalogRoutes from "./routes/catalog.routes.js"
 import collectionRoutes from "./routes/collection.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import newArrivalRoutes from "./routes/newArrival.routes.js";
+import uploadRoutes from "./routes/upload.routes.js"
 
 const app = express()
 
@@ -17,10 +18,12 @@ const app = express()
 //     credentials: true,
 //   })
 // )
-app.use(cors({
-  origin: "http://localhost:3000", // frontend ka domain
-  credentials: true
-}))
+// app.use(cors({
+//   origin: "http://localhost:3000", // frontend ka domain
+//   credentials: true
+// }))
+
+app.use("/api/catalogs/upload", uploadRoutes)
 
 // ✅ Body parser
 app.use(express.json())
@@ -34,5 +37,9 @@ app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 
 app.use("/api/new-arrivals", newArrivalRoutes);
+
+// Static folder serve karne ke liye:
+app.use("/uploads", express.static("public/uploads"))
+
 
 export default app
