@@ -12,9 +12,9 @@ router.put("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.upd
 router.delete("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.deleteCatalog)
 
 // Both user and admin can read
-router.get("/", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogs)
+router.get("/",  catalogController.getCatalogs)
 // router.get("/", catalogController.getCatalogs)
-router.get("/:id", verifyOathkeeper, authorize(["admin", "user"]), catalogController.getCatalogById)
+router.get("/:id",  catalogController.getCatalogById)
 // router.get("/:id", catalogController.getCatalogById)
 
 // New route: get catalogs by category hierarchy

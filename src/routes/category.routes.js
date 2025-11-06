@@ -11,8 +11,8 @@ router.put("/:id", verifyOathkeeper, authorize(["admin"]), categoryController.up
 router.delete("/:id", verifyOathkeeper, authorize(["admin"]), categoryController.deleteCategory);
 
 // Both user and admin can read
-router.get("/", verifyOathkeeper, authorize(["admin", "user"]),  categoryController.getCategories);
-router.get("/:id", verifyOathkeeper, authorize(["admin", "user"]), categoryController.getCategoryById);
+router.get("/",  categoryController.getCategories);
+router.get("/:id", categoryController.getCategoryById);
 
 // Get categories by level (C1, C2, C3)
 // router.get(
