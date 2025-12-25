@@ -12,7 +12,7 @@ services:
     volumes:
       - catalog_mongo_data:/data/db
     networks:
-      - catalog_net
+      - snm_jewelry_network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -37,7 +37,7 @@ services:
       catalog_mongo:
         condition: service_healthy
     networks:
-      - catalog_net
+      - snm_jewelry_network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
       interval: 30s
@@ -46,8 +46,8 @@ services:
       start_period: 40s
 
 networks:
-  catalog_net:
-    driver: bridge
+  snm_jewelry_network:
+    external: true
 
 volumes:
   catalog_mongo_data:
