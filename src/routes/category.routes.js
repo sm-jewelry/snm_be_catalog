@@ -1,14 +1,13 @@
 import express from "express";
 import * as categoryController from "../controllers/category.controller.js";
-import { verifyOathkeeper } from "../middleware/oathkeeper.js";
-import { authorize } from "../middleware/authorize.js";
+import { verifyAuth, authorize } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Only admin can create, update, delete
-router.post("/", verifyOathkeeper, authorize(["admin"]), categoryController.createCategory);
-router.put("/:id", verifyOathkeeper, authorize(["admin"]), categoryController.updateCategory);
-router.delete("/:id", verifyOathkeeper, authorize(["admin"]), categoryController.deleteCategory);
+router.post("/", verifyAuth, authorize(["admin"]), categoryController.createCategory);
+router.put("/:id", verifyAuth, authorize(["admin"]), categoryController.updateCategory);
+router.delete("/:id", verifyAuth, authorize(["admin"]), categoryController.deleteCategory);
 
 // Both user and admin can read
 router.get("/",  categoryController.getCategories);

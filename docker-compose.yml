@@ -1,17 +1,28 @@
 version: "3.8"
 
 services:
-  mongo:
+  catalog_mongo:
     image: mongo:6
     container_name: catalog_mongo
     restart: always
+    environment:
+      MONGO_INITDB_DATABASE: catalog_db
+    ports:
+      - "27018:27017"
     volumes:
-      - mongo_data:/data/db
+      - catalog_mongo_data:/data/db
     networks:
       - catalog_net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   catalog_service:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: catalog_service
     restart: always
     ports:
@@ -19,15 +30,25 @@ services:
     env_file:
       - .env
     environment:
+      - NODE_ENV=production
       - PORT=5000
-      - MONGO_URI=mongodb://mongo:27017/hydra-demo
+      - MONGO_URI=mongodb://catalog_mongo:27017/catalog_db
     depends_on:
-      - mongo
+      catalog_mongo:
+        condition: service_healthy
     networks:
       - catalog_net
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   catalog_net:
+    driver: bridge
 
 volumes:
-  mongo_data:
+  catalog_mongo_data:
+    driver: local

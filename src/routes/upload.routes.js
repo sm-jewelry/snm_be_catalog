@@ -2,6 +2,7 @@ import express from "express"
 import multer from "multer"
 import path from "path"
 import fs from "fs"
+import { verifyAuth, authorize } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
 
@@ -22,8 +23,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-// POST /api/upload
-router.post("/", upload.single("file"), (req, res) => {
+// POST /api/upload - Only admin can upload
+router.post("/", verifyAuth, authorize(["admin"]), upload.single("file"), (req, res) => {
   const baseUrl = process.env.BASE_URL || "http://localhost:5000"
   const fileUrl = `${baseUrl}/uploads/catalogs/${req.file.filename}`
   res.json({ url: fileUrl })

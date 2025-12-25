@@ -9,19 +9,14 @@ import uploadRoutes from "./routes/upload.routes.js"
 
 const app = express()
 
-// CORS setup
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173",
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Authorization", "Content-Type"],
-//     credentials: true,
-//   })
-// )
-// app.use(cors({
-//   origin: "http://localhost:3000", // frontend ka domain
-//   credentials: true
-// }))
+// CORS setup - Allow frontend to access API
+app.use(cors({
+  origin: ["http://192.168.1.4:3000","http://localhost:3000","https://www.snm.jewelry/", "http://localhost:8000/"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Authorization", "Content-Type", "X-Requested-With"],
+  credentials: true,
+  optionsSuccessStatus: 200
+}))
 
 app.use("/api/catalogs/upload", uploadRoutes)
 

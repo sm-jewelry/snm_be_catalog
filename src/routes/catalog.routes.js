@@ -1,32 +1,24 @@
 import express from "express"
 import * as catalogController from "../controllers/catalog.controller.js"
-import { verifyOathkeeper } from "../middleware/oathkeeper.js"
-import { authorize } from "../middleware/authorize.js"
+import { verifyAuth, authorize } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
 
 // Only admin can create, update, delete
-router.post("/", verifyOathkeeper, authorize(["admin"]), catalogController.createCatalog)
-// router.post("/", catalogController.createCatalog)
-router.put("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.updateCatalog)
-router.delete("/:id", verifyOathkeeper, authorize(["admin"]), catalogController.deleteCatalog)
+router.post("/", verifyAuth, authorize(["admin"]), catalogController.createCatalog)
+router.put("/:id", verifyAuth, authorize(["admin"]), catalogController.updateCatalog)
+router.delete("/:id", verifyAuth, authorize(["admin"]), catalogController.deleteCatalog)
 
-// Both user and admin can read
+// Both user and admin can read (no auth required for public catalog browsing)
 router.get("/",  catalogController.getCatalogs)
-// router.get("/", catalogController.getCatalogs)
 router.get("/:id",  catalogController.getCatalogById)
-// router.get("/:id", catalogController.getCatalogById)
 
-// New route: get catalogs by category hierarchy
-router.get(
-  "/hierarchy",
-  verifyOathkeeper,
-  authorize(["admin", "user"]),
-  catalogController.getCatalogsHierarchy
-);
+// Get catalogs by category hierarchy (requires auth)
+router.get("/hierarchy", verifyAuth, authorize(["admin", "user"]), catalogController.getCatalogsHierarchy);
 
-// PATCH /api/catalogs/stock/:id - update stock
-router.patch("/stock/:id", catalogController.updateStock);
+// PATCH /api/catalogs/stock/:id - update stock (protected - only for inter-service calls)
+// This should be called by order service, so it needs authentication
+router.patch("/stock/:id", verifyAuth, catalogController.updateStock);
 
 
 export default router
