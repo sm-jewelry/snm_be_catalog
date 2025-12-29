@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const CUSTOMER_SERVICE_URL =
-  process.env.CUSTOMER_SERVICE_URL || "http://localhost:4000";
+  process.env.CUSTOMER_SERVICE_URL || "http://localhost:4001";
 
 /**
  * Verify token with customer service and attach user to request
