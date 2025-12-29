@@ -36,5 +36,13 @@ app.use("/api/new-arrivals", newArrivalRoutes);
 // Static folder serve karne ke liye:
 app.use("/uploads", express.static("public/uploads"))
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Catalog service is healthy",
+    timestamp: new Date().toISOString()
+  });
+});
 
 export default app
