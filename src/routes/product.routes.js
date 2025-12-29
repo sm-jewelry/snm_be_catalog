@@ -9,6 +9,7 @@ router.get("/:id", productController.getProduct);
 router.post("/", verifyAuth, authorize(["admin"]), productController.createProduct);
 router.put("/:id", verifyAuth, authorize(["admin"]), productController.updateProduct);
 router.delete("/:id", verifyAuth, authorize(["admin"]), productController.deleteProduct);
+router.patch("/:id/increment-sales", productController.incrementSales);
 router.get("/", productController.getAllProducts);
 
 export default router;

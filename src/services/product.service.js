@@ -3,7 +3,7 @@ import Product from "../models/product.model.js";
 export const getProductsByCollection = async (collectionId) =>
   await Product.find({ collectionId });
 
-export const getProductById = async (id) => await Product.findById(id);
+export const getProductById = async (id) => await Product.findById(id).populate("collectionId", "name description");
 
 export const createProduct = async (data) => {
   const product = new Product(data);
@@ -18,4 +18,12 @@ export const deleteProduct = async (id) =>
 
 export const getAllProducts = async () => {
   return await Product.find().populate("collectionId", "name");
+};
+
+export const incrementSales = async (id, quantity = 1) => {
+  return await Product.findByIdAndUpdate(
+    id,
+    { $inc: { salesCount: quantity } },
+    { new: true }
+  );
 };

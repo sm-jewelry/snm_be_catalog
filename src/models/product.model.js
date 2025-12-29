@@ -32,6 +32,37 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: ""
+  },
+  // E-commerce features
+  salesCount: {
+    type: Number,
+    default: 0,
+    index: true
+  },
+  rating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5
+  },
+  reviewCount: {
+    type: Number,
+    default: 0
+  },
+  brand: {
+    type: String,
+    default: "",
+    index: true
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
+  isTrending: {
+    type: Boolean,
+    default: false,
+    index: true
   }
 }, { timestamps: true });
 

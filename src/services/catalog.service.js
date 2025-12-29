@@ -74,3 +74,11 @@ export const updateStock = async (id, quantity) => {
   return catalog;
 };
 
+export const incrementSales = async (id, quantity = 1) => {
+  return await Catalog.findByIdAndUpdate(
+    id,
+    { $inc: { salesCount: quantity } },
+    { new: true }
+  );
+};
+

@@ -20,5 +20,8 @@ router.get("/hierarchy", verifyAuth, authorize(["admin", "user"]), catalogContro
 // This should be called by order service, so it needs authentication
 router.patch("/stock/:id", verifyAuth, catalogController.updateStock);
 
+// PATCH /api/catalogs/:id/increment-sales - increment sales count
+router.patch("/:id/increment-sales", catalogController.incrementSales);
+
 
 export default router

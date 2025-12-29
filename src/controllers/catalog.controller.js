@@ -57,3 +57,17 @@ export const updateStock = async (req, res) => {
   }
 };
 
+export const incrementSales = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    const catalog = await catalogService.incrementSales(id, quantity || 1);
+    if (!catalog) {
+      return res.status(404).json({ message: "Catalog not found" });
+    }
+    res.json({ success: true, salesCount: catalog.salesCount });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
