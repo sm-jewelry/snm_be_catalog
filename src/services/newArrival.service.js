@@ -1,5 +1,4 @@
 import Catalog from "../models/catalog.model.js";
-import Product from "../models/product.model.js";
 import mongoose from "mongoose";
 
 export const getNewArrivals = async () => {
@@ -8,17 +7,9 @@ export const getNewArrivals = async () => {
 
   // Latest catalog products
   const latestCatalogs = await Catalog.find({ createdAt: { $gte: oneMonthAgo } })
-    .populate("c1 c2 c3")
+    .populate("c1 c2 c3 category")
+    .sort({ createdAt: -1 })
     .lean();
 
-  // Latest collection products
-  const latestProducts = await Product.find({ createdAt: { $gte: oneMonthAgo } })
-    .lean();
-
-  // Merge both arrays (optional: you can sort by date descending)
-  const merged = [...latestCatalogs, ...latestProducts].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
-
-  return merged;
+  return latestCatalogs;
 };

@@ -49,8 +49,18 @@ export const deleteProduct = async (req, res) => {
 // product.controller.js
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await productService.getAllProducts();
-    res.json(products);
+    const options = {
+      page: req.query.page,
+      limit: req.query.limit,
+      sortBy: req.query.sortBy,
+      sortOrder: req.query.sortOrder,
+      minPrice: req.query.minPrice,
+      maxPrice: req.query.maxPrice,
+      search: req.query.search,
+    };
+
+    const result = await productService.getAllProducts(options);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

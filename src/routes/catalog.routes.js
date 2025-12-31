@@ -11,6 +11,7 @@ router.delete("/:id", verifyAuth, authorize(["admin"]), catalogController.delete
 
 // Both user and admin can read (no auth required for public catalog browsing)
 router.get("/",  catalogController.getCatalogs)
+router.get("/collection/:id",  catalogController.getCatalogsByCategory)
 router.get("/:id",  catalogController.getCatalogById)
 
 // Get catalogs by category hierarchy (requires auth)

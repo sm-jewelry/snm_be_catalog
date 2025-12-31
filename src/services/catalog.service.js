@@ -24,8 +24,60 @@ export const createCatalog = async (data) => {
   return await Catalog.create(data);
 };
 
-export const getCatalogs = async () => {
-  return await Catalog.find().populate("c1 c2 c3");
+export const getCatalogs = async (filters = {}) => {
+  const {
+    page = 1,
+    limit = 12,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    minPrice,
+    maxPrice,
+    search,
+  } = filters;
+
+  // Build query
+  const query = {};
+
+  // Price filter
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) query.price.$gte = parseFloat(minPrice);
+    if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+  }
+
+  // Search filter (search in title, SKU, brand)
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { SKU: { $regex: search, $options: "i" } },
+      { brand: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // Calculate pagination
+  const skip = (page - 1) * limit;
+  const sortOptions = { [sortBy]: sortOrder === "asc" ? 1 : -1 };
+
+  // Execute query with pagination
+  const [products, total] = await Promise.all([
+    Catalog.find(query)
+      .populate("c1 c2 c3 category")
+      .sort(sortOptions)
+      .limit(parseInt(limit))
+      .skip(skip)
+      .lean(),
+    Catalog.countDocuments(query),
+  ]);
+
+  return {
+    products,
+    pagination: {
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+      limit: parseInt(limit),
+    },
+  };
 };
 
 export const getCatalogById = async (id) => {
@@ -80,5 +132,10 @@ export const incrementSales = async (id, quantity = 1) => {
     { $inc: { salesCount: quantity } },
     { new: true }
   );
+};
+
+// Get catalogs by collection/category ID
+export const getCatalogsByCategory = async (categoryId) => {
+  return await Catalog.find({ category: categoryId }).populate("c1 c2 c3 category");
 };
 

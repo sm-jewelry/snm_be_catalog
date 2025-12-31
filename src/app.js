@@ -3,7 +3,6 @@ import cors from "cors"
 import categoryRoutes from "./routes/category.routes.js"
 import catalogRoutes from "./routes/catalog.routes.js"
 import collectionRoutes from "./routes/collection.routes.js";
-import productRoutes from "./routes/product.routes.js";
 import newArrivalRoutes from "./routes/newArrival.routes.js";
 import bestSellerRoutes from "./routes/bestSeller.routes.js";
 import topRatedRoutes from "./routes/topRated.routes.js";
@@ -11,6 +10,7 @@ import brandsRoutes from "./routes/brands.routes.js";
 import trendingRoutes from "./routes/trending.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
 import categoryProductsRoutes from "./routes/categoryProducts.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
 
 const app = express()
 
@@ -32,9 +32,7 @@ app.use(express.urlencoded({ extended: true }))
 // Routes
 app.use("/api/categories", categoryRoutes)
 app.use("/api/catalogs", catalogRoutes)
-
 app.use("/api/collections", collectionRoutes);
-app.use("/api/products", productRoutes);
 
 app.use("/api/new-arrivals", newArrivalRoutes);
 app.use("/api/best-sellers", bestSellerRoutes);
@@ -42,6 +40,7 @@ app.use("/api/top-rated", topRatedRoutes);
 app.use("/api/brands", brandsRoutes);
 app.use("/api/trending", trendingRoutes);
 app.use("/api/category-products", categoryProductsRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Static folder serve karne ke liye:
 app.use("/uploads", express.static("public/uploads"))

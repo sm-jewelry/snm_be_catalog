@@ -2,7 +2,7 @@ import app from "./src/app.js"
 import mongoose from "mongoose"
 
 const PORT = process.env.PORT || 5000
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/hydra-demo"
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/snm_jewellery_catalog"
 
 mongoose.connect(MONGO_URI).then(() => {
   console.log("✅ MongoDB connected")

@@ -1,4 +1,4 @@
-import Product from "../models/product.model.js";
+import Catalog from "../models/catalog.model.js";
 import Collection from "../models/collection.model.js";
 
 export const getTrendingProductsByCollection = async () => {
@@ -9,12 +9,14 @@ export const getTrendingProductsByCollection = async () => {
 
   for (const collection of collections) {
     // Get trending products for this collection
-    const trendingProducts = await Product.find({
-      collectionId: collection._id,
-      isTrending: true
+    // Note: In Catalog model, 'category' field links to collections
+    const trendingProducts = await Catalog.find({
+      category: collection._id,
+      salesCount: { $gt: 0 } // Use salesCount as trending indicator
     })
-      .sort({ createdAt: -1, rating: -1 })
+      .sort({ salesCount: -1, rating: -1 })
       .limit(4) // 4 trending products per collection
+      .populate("c1 c2 c3")
       .lean();
 
     if (trendingProducts.length > 0) {
@@ -34,9 +36,9 @@ export const getTrendingProductsByCollection = async () => {
 };
 
 export const getAllTrending = async (limit = 20) => {
-  return await Product.find({ isTrending: true })
-    .sort({ createdAt: -1, rating: -1 })
+  return await Catalog.find({ salesCount: { $gt: 0 } })
+    .sort({ salesCount: -1, rating: -1 })
     .limit(limit)
-    .populate("collectionId")
+    .populate("category c1 c2 c3")
     .lean();
 };

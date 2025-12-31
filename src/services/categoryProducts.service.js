@@ -1,5 +1,4 @@
 import Catalog from "../models/catalog.model.js";
-import Product from "../models/product.model.js";
 
 /**
  * Get products/catalogs by category ID
@@ -20,19 +19,14 @@ export const getProductsByCategory = async (categoryId, level = null) => {
     ];
   }
 
-  // Get both catalogs and products
-  const [catalogs, products] = await Promise.all([
-    Catalog.find(query)
-      .populate("c1", "name")
-      .populate("c2", "name")
-      .populate("c3", "name")
-      .lean(),
-    Product.find({})
-      .populate("collectionId", "name")
-      .lean(),
-  ]);
+  // Get catalogs
+  const catalogs = await Catalog.find(query)
+    .populate("c1", "name")
+    .populate("c2", "name")
+    .populate("c3", "name")
+    .populate("category")
+    .lean();
 
-  // Combine and return (catalogs have priority as they have category info)
   return catalogs;
 };
 

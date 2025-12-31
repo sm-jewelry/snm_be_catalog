@@ -10,8 +10,22 @@ export const createCatalog = async (req, res) => {
 };
 
 export const getCatalogs = async (req, res) => {
-  const catalogs = await catalogService.getCatalogs();
-  res.json(catalogs);
+  try {
+    const filters = {
+      page: req.query.page,
+      limit: req.query.limit,
+      sortBy: req.query.sortBy,
+      sortOrder: req.query.sortOrder,
+      minPrice: req.query.minPrice,
+      maxPrice: req.query.maxPrice,
+      search: req.query.search,
+    };
+
+    const result = await catalogService.getCatalogs(filters);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 export const getCatalogById = async (req, res) => {
@@ -66,6 +80,16 @@ export const incrementSales = async (req, res) => {
       return res.status(404).json({ message: "Catalog not found" });
     }
     res.json({ success: true, salesCount: catalog.salesCount });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getCatalogsByCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const catalogs = await catalogService.getCatalogsByCategory(id);
+    res.json(catalogs);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
