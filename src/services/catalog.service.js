@@ -61,7 +61,7 @@ export const getCatalogs = async (filters = {}) => {
   // Execute query with pagination
   const [products, total] = await Promise.all([
     Catalog.find(query)
-      .populate("c1 c2 c3 category")
+      .populate("c1 c2 c3 category collection")
       .sort(sortOptions)
       .limit(parseInt(limit))
       .skip(skip)
@@ -81,7 +81,7 @@ export const getCatalogs = async (filters = {}) => {
 };
 
 export const getCatalogById = async (id) => {
-  return await Catalog.findById(id).populate("c1 c2 c3");
+  return await Catalog.findById(id).populate("c1 c2 c3 category collection");
 };
 
 export const updateCatalog = async (id, data) => {

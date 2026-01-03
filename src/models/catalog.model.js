@@ -9,6 +9,7 @@ const catalogSchema = new mongoose.Schema(
     URL: { type: String },
 
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+    collection: { type: mongoose.Schema.Types.ObjectId, ref: "Collection" },
 
     c1: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     c2: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
