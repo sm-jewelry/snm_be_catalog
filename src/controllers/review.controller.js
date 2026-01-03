@@ -11,7 +11,12 @@ import { stringify } from "csv-stringify/sync";
  */
 export const createReview = async (req, res) => {
   try {
-    const { userId, userName, userEmail } = req.user; // From auth middleware
+    // Extract user data from auth middleware
+    const user = req.user;
+    const userId = user._id || user.userId;
+    const userName = `${user.firstName} ${user.lastName}`;
+    const userEmail = user.email;
+
     const { productId, productTitle, orderId, rating, title, comment, images } =
       req.body;
 
@@ -100,7 +105,7 @@ export const getProductReviewStats = async (req, res) => {
  */
 export const getMyReviews = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
     const { page, limit } = req.query;
 
     const result = await reviewService.getUserReviews(userId, {
@@ -121,7 +126,7 @@ export const getMyReviews = async (req, res) => {
 export const updateMyReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
     const updateData = req.body;
 
     const review = await reviewService.updateReviewByUser(
@@ -147,7 +152,7 @@ export const updateMyReview = async (req, res) => {
 export const deleteMyReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
 
     const result = await reviewService.deleteReviewByUser(id, userId);
 
@@ -164,7 +169,7 @@ export const deleteMyReview = async (req, res) => {
 export const voteReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
     const { voteType } = req.body; // "helpful" or "notHelpful"
 
     if (!["helpful", "notHelpful"].includes(voteType)) {
@@ -186,7 +191,7 @@ export const voteReview = async (req, res) => {
 export const checkCanReview = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
 
     const result = await reviewService.checkUserHasOrderedProduct(userId, productId);
 
@@ -223,7 +228,7 @@ export const getAllReviewsAdmin = async (req, res) => {
 export const approveReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
 
     const review = await reviewService.approveReview(id, userId);
 
@@ -244,7 +249,7 @@ export const approveReview = async (req, res) => {
 export const rejectReview = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
     const { reason } = req.body;
 
     const review = await reviewService.rejectReview(id, userId, reason);
@@ -266,7 +271,7 @@ export const rejectReview = async (req, res) => {
 export const updateReviewAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user._id || req.user.userId;
     const updateData = req.body;
 
     const review = await reviewService.updateReviewByAdmin(
