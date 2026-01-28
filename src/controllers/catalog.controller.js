@@ -19,6 +19,9 @@ export const getCatalogs = async (req, res) => {
       minPrice: req.query.minPrice,
       maxPrice: req.query.maxPrice,
       search: req.query.search,
+      category: req.query.category,
+      collection: req.query.collection,
+      minRating: req.query.minRating,
     };
 
     const result = await catalogService.getCatalogs(filters);

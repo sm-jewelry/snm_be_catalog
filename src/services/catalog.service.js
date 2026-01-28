@@ -33,6 +33,9 @@ export const getCatalogs = async (filters = {}) => {
     minPrice,
     maxPrice,
     search,
+    category,
+    collection,
+    minRating,
   } = filters;
 
   // Build query
@@ -45,13 +48,44 @@ export const getCatalogs = async (filters = {}) => {
     if (maxPrice) query.price.$lte = parseFloat(maxPrice);
   }
 
+  // Category filter (check c1, c2, c3, or category fields)
+  if (category && category !== "all") {
+    query.$or = [
+      { c1: category },
+      { c2: category },
+      { c3: category },
+      { category: category },
+    ];
+  }
+
+  // Collection filter
+  if (collection && collection !== "all") {
+    query.collection = collection;
+  }
+
+  // Minimum rating filter
+  if (minRating) {
+    query.rating = { $gte: parseFloat(minRating) };
+  }
+
   // Search filter (search in title, SKU, brand)
   if (search) {
-    query.$or = [
+    const searchConditions = [
       { title: { $regex: search, $options: "i" } },
       { SKU: { $regex: search, $options: "i" } },
       { brand: { $regex: search, $options: "i" } },
     ];
+
+    // If we already have $or from category, we need to use $and
+    if (query.$or) {
+      query.$and = [
+        { $or: query.$or },
+        { $or: searchConditions },
+      ];
+      delete query.$or;
+    } else {
+      query.$or = searchConditions;
+    }
   }
 
   // Calculate pagination
